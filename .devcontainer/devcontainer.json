@@ -4,8 +4,7 @@
 	"name": "pico_devcontainer_template",
 	"dockerComposeFile": "../docker-compose.yml",
 	"initializeCommand": "${localWorkspaceFolder}/.devcontainer/setup_devcontainer.sh",
-	// プロジェクトに応じて変更してください
-	"workspaceFolder": "/workspace/pico_devcontainer_template",
+	"workspaceFolder": "/workspace",
 	"mounts": [
 		// ホストのSSHキーをコンテナにマウントする
 		"source=${env:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"

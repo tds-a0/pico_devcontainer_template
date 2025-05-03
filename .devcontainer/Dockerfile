@@ -43,7 +43,7 @@ RUN git clone https://github.com/ThrowTheSwitch/Unity.git /opt/Unity
 ENV UNITY_PATH=/opt/Unity
 
 # コンテナにマウントするディレクトリ
-WORKDIR /workspace/pico_devcontainer_template
+WORKDIR /workspace
 
 # devcontainerの仕様上、何もしないでも生きているコンテナを作らないと落ちるためプロセスを永続化
 CMD [ "sleep", "infinity" ]
