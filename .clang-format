@@ -1,0 +1,6 @@
+BreakBeforeBraces: Allman
+UseTab: Always
+TabWidth: 4
+AllowShortIfStatementsOnASingleLine: true
+IndentWidth: 4
+ColumnLimit: 100

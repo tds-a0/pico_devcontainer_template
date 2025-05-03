@@ -1,0 +1,12 @@
+services:
+  pico_devcontainer_template:
+    build:
+      context: .
+      dockerfile: ./.devcontainer/Dockerfile
+      args:
+        USER_ID: ${LOCAL_UID}
+        GROUP_ID: ${LOCAL_GID}
+    volumes:
+      # 現在のディレクトリをコンテナの/workspace/pico_devcontainer_templateにマウント
+      # プロジェクトに応じて変更してください
+      - .:/workspace/pico_devcontainer_template
