@@ -37,12 +37,6 @@ RUN apt-get update && apt-get install -y \
 	libhidapi-hidraw0 && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# pico-sdkとUnityをクローン
-RUN git clone https://github.com/ThrowTheSwitch/Unity.git /opt/Unity
-
-# pico-sdkとUnityの環境変数を通す
-ENV UNITY_PATH=/opt/Unity
-
 # コンテナにマウントするディレクトリ
 WORKDIR /workspace
 
