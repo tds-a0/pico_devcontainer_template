@@ -7,6 +7,7 @@ ARG GROUP_ID
 # 対話的なインストールを避けるために、環境変数を設定
 ARG DEBIAN_FRONTEND=noninteractive
 
+# ホストから渡されたUIDとGIDをリモートに設定
 RUN set -eux; \
 	EXISTING_GROUP=$(getent group ${GROUP_ID} | cut -d: -f1 || true); \
 	if [ -z "$EXISTING_GROUP" ]; then \
