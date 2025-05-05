@@ -28,13 +28,15 @@ Rasberry Pi Picoプロジェクトを作成するためのdevcontainerテンプ�
 	- 初期化ディレクトリ名を変更した場合は、`temp_project` をその名前に置き換えてください。
 
 5. スクリプトは以下の処理を自動で行います
-	- 初期化されたプロジェクトのファイル（`temp_project`内の`.vscode/`, `src/`, `CMakeLists.txt`など）を `workspace/` に移動
-	- 一時ディレクトリ `temp_project/` の削除
+	- 初期化されたプロジェクトのファイル（`temp_project/`内の`.vscode/`, `src/`, `CMakeLists.txt`など）を `workspace/` に移動。
+	- `.env` ファイルの内容（`PROJECT_NAME`）を元に、`CMakeLists.txt` 内のプロジェクト名が正しく書き換え。
+		- たとえば、初期化時に `project(temp_project ...)` のように書かれていたものが、`.env` に記録された `PROJECT_NAME` に自動的に置き換わります。
+	- 一時ディレクトリ `temp_project/` の削除。
 
-6. これにより、`workspace/` 直下に初期化されたPicoプロジェクトの構成が展開され、ホストで初期化された構成と同様になります
+6. これにより、`workspace/` 直下に初期化されたPicoプロジェクトの構成が展開され、ホストで初期化された構成と同様になります。
 
 7. VScodeのウィンドウを再読込してください。
 	- スクリプトにより `build/` ディレクトリが削除されたため、再読み込みによりCMakeが自動的に再構成されます。
 	- 再読み込み手順：
-		- `Ctrl + Shift + P` を押してコマンドパレットを開く
-		- 「**Developer: Reload Window**」と入力して選択
+		- `Ctrl + Shift + P` を押してコマンドパレットを開く。
+		- 「**Developer: Reload Window**」と入力して選択。
