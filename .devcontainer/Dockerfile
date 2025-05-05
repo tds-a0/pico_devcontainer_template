@@ -23,6 +23,9 @@ RUN set -eux; \
 RUN apt-get update && apt-get install -y \
 	git \
 	cmake \
+	make \
+	gcc \
+	build-essential \
 	libnewlib-arm-none-eabi \
 	clang-format \
 	python3 \
@@ -30,7 +33,6 @@ RUN apt-get update && apt-get install -y \
 	tar \
 	ninja-build \
 	openocd \
-	gdb-multiarch \
 	libftdi1-2 \
 	libhidapi-hidraw0 && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
