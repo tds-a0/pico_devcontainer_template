@@ -4,7 +4,7 @@ set -e
 # 引数チェック
 if [ -z "$1" ]; then
 	echo "初期化されたプロジェクトディレクトリ名を指定してください"
-	echo "使用例: bash move_pico_project.sh temp_project"
+	echo "使用例: ./move_pico_project.sh temp_project"
 	exit 1
 fi
 
@@ -26,16 +26,27 @@ if [ -f "$DST/CMakeLists.txt" ]; then
 	exit 1
 fi
 
+# .gitignore マージ処理（重複削除つき）
+if [ -f "$SRC/.gitignore" ]; then
+	echo ".gitignore をマージ中..."
+	touch "$DST/.gitignore"
+
+	# 2つのファイルを結合してソート＆重複削除
+	awk 'NF && !seen[$0]++' "$SRC/.gitignore" "$DST/.gitignore" >"$DST/.gitignore.merged"
+	mv "$DST/.gitignore.merged" "$DST/.gitignore"
+
+	# 上書き防止のため削除
+	rm -f "$SRC/.gitignore"
+fi
+
 echo "中身を移動中..."
 shopt -s dotglob
 mv "$SRC"/* "$DST"/
 rm -rf "$SRC"
 
-# パス修正
-VSCODE_LAUNCH="$DST/.vscode/launch.json"
-if [ -f "$VSCODE_LAUNCH" ]; then
-  echo "🛠 launch.json を修正中..."
-  sed -i "s|$NAME/||g" "$VSCODE_LAUNCH"
-fi
+echo "/buildディレクトリを削除中..."
+rm -rf "$DST/build"
 
-echo "完了しました！"
+echo ""
+echo "スクリプト完了：このままでは CMake が再構成されません。"
+echo "[Ctrl+Shift+P] → 'Developer: Reload Window' で VSCode を再読み込みしてください。"

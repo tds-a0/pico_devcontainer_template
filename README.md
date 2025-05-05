@@ -1,7 +1,7 @@
 # pico_devcontainer_template
 
 Rasberry Pi Picoプロジェクトを作成するためのdevcontainerテンプレート<br>
-このテンプレートをコピーして、新しくリポジトリを作成してください。
+本テンプレートをコピーして、新しくリポジトリを作成してください。
 
 ## 対応プラットフォーム
 
@@ -18,8 +18,8 @@ Rasberry Pi Picoプロジェクトを作成するためのdevcontainerテンプ�
 2. VScodeでコマンドパレットを開き`Dev Containers: Reopen in Container`を選択してDevcontainerを起動します。
 3. DevContainer内で、Raspberry Pi Pico拡張機能を使ってプロジェクトを初期化してください。
 	- 初期化先のディレクトリは`/workspace/temp_project`など、一時的な名前にしてください。
-	- このディレクトリは/workspaceあとの工程で削除されます。
-4. 初期化が完了したら、ターミナルで以下のスクリプトを実行してプロジェクトの中身を`workspace/`に展開します。
+	- このディレクトリは後の工程で削除されます。
+4. 初期化後、ターミナルで以下のスクリプトを実行してプロジェクトの中身を`workspace/`に展開します。
 
 	```bash
 	$ ./move_pico_project.sh temp_project
@@ -32,3 +32,9 @@ Rasberry Pi Picoプロジェクトを作成するためのdevcontainerテンプ�
 	- 一時ディレクトリ `temp_project/` の削除
 
 6. これにより、`workspace/` 直下に初期化されたPicoプロジェクトの構成が展開され、ホストで初期化された構成と同様になります
+
+7. VScodeのウィンドウを再読込してください。
+	- スクリプトにより `build/` ディレクトリが削除されたため、再読み込みによりCMakeが自動的に再構成されます。
+	- 再読み込み手順：
+		- `Ctrl + Shift + P` を押してコマンドパレットを開く
+		- 「**Developer: Reload Window**」と入力して選択
