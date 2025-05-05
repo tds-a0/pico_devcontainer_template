@@ -37,6 +37,12 @@ RUN apt-get update && apt-get install -y \
 	libhidapi-hidraw0 && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Unityをクローン
+RUN git clone https://github.com/ThrowTheSwitch/Unity.git /opt/Unity
+
+# Unityの環境変数を通す
+ENV UNITY_PATH=/opt/Unity
+
 # コンテナにマウントするディレクトリ
 WORKDIR /workspace
 
