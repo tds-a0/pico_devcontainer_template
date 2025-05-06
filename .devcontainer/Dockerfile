@@ -23,19 +23,15 @@ RUN set -eux; \
 RUN apt-get update && apt-get install -y \
 	git \
 	cmake \
-	make \
-	gcc \
-	build-essential \
-	libnewlib-arm-none-eabi \
-	clang-format \
+	ninja-build \
 	python3 \
 	python3-pip \
 	tar \
-	ninja-build \
-	openocd \
+	libnewlib-arm-none-eabi \
+	libhidapi-hidraw0 \
 	libftdi1-2 \
-	libhidapi-hidraw0 && \
-	apt-get clean && rm -rf /var/lib/apt/lists/*
+	clang-format \
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Unityをクローン
 RUN git clone https://github.com/ThrowTheSwitch/Unity.git /opt/Unity

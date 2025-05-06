@@ -3,6 +3,9 @@
 	// プロジェクトに応じて変更してください
 	"name": "pico_devcontainer_template",
 	"dockerComposeFile": "../docker-compose.yml",
+	"forwardPorts": [
+		3000
+	],
 	"initializeCommand": "${localWorkspaceFolder}/.devcontainer/setup_devcontainer.sh",
 	"workspaceFolder": "/workspace",
 	"mounts": [

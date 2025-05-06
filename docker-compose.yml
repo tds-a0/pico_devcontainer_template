@@ -9,3 +9,5 @@ services:
     volumes:
       # 現在のディレクトリをコンテナの/workspaceにマウント
       - .:/workspace
+    ports:
+      - "3000:3000"
