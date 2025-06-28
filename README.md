@@ -3,11 +3,23 @@
 Raspberry Pi Pico公式VSCode拡張機能と組み合わせて使用するDevContainerテンプレート<br>
 [Raspberry Pi Pico VSCode Extension](https://marketplace.visualstudio.com/items?itemName=raspberry-pi.raspberry-pi-pico)を使用したPico開発環境をDevContainer内で構築できます。
 
+## 概要
+
+このテンプレートは、Raspberry Pi Pico公式VSCode拡張機能をDevContainer環境で活用するためのものです。<br>
+拡張機能によるSDK管理、プロジェクト生成、ビルド、デバッグ機能をコンテナ化された環境で利用できます。
 
 ## 対応プラットフォーム
 
-**本テンプレートはLinux(Ubuntu)専用です。**<br>
-DevContainer Featuresとautomatic UID/GID mappingを使用しており、LinuxのDocker環境で最適化されています。
+本テンプレートは以下のプラットフォームで動作します。：
+
+- **Linux**: Docker Engine / Docker Desktop
+- **Windows**: Docker Desktop + WSL2
+- **macOS**: Docker Desktop
+
+**注意事項：**
+
+- USB デバイスアクセス（Pico書き込み・デバッグ）はプラットフォームによって設定が異なります。
+- Linux環境では最も完全な開発体験を提供します。
 
 ## 特徴
 
@@ -43,16 +55,16 @@ DevContainer Featuresとautomatic UID/GID mappingを使用しており、Linux�
 
 	- 初期化ディレクトリ名を変更した場合は、`temp_project` をその名前に置き換えてください。
 
-5. スクリプトは以下の処理を自動で行います
-	- 初期化されたプロジェクトのファイル（`temp_project/`内の`.vscode/`, `src/`, `CMakeLists.txt`など）を `workspace/` に移動。
-	- `.env` ファイルの内容（`PROJECT_NAME`）を元に、`CMakeLists.txt` 内のプロジェクト名が正しく書き換え。
+5. スクリプトは以下の処理を自動で行います。
+	- 初期化されたプロジェクトのファイル（`temp_project/`内の`.vscode/`, `src/`, `CMakeLists.txt`など）を `workspace/` に移動
+	- `.env` ファイルの内容（`PROJECT_NAME`）を元に、`CMakeLists.txt` 内のプロジェクト名が正しく書き換え
 		- たとえば、初期化時に `project(temp_project ...)` のように書かれていたものが、`.env` に記録された `PROJECT_NAME` に自動的に置き換わります。
-	- 一時プロジェクトディレクトリ `temp_project/` の削除。
+	- 一時プロジェクトディレクトリ `temp_project/` の削除
 
 6. これにより、`workspace/` 直下に初期化されたPicoプロジェクトの構成が展開され、ホストで初期化された構成と同様になります。
 
 7. VScodeのウィンドウを再読込してください。
 	- スクリプトにより `build/` ディレクトリが削除されたため、再読み込みによりCMakeが自動的に再構成されます。
 	- 再読み込み手順：
-		- `Ctrl + Shift + P` を押してコマンドパレットを開く。
-		- 「**Developer: Reload Window**」と入力して選択。
+		- `Ctrl + Shift + P` を押してコマンドパレットを開く
+		- 「**Developer: Reload Window**」と入力して選択
