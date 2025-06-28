@@ -32,7 +32,8 @@
 		"ghcr.io/devcontainers/features/python:1": {
 			"version": "3.11",
 			"installTools": true
-		}
+		},
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
 	},
 	"postCreateCommand": "/workspace/.devcontainer/setup_devcontainer.sh",
 	"customizations": {
@@ -43,7 +44,8 @@
 				"ms-vscode.cmake-tools",
 				"ajshort.include-autocomplete",
 				"KylinIdeTeam.cmake-intellisence",
-				"raspberry-pi.raspberry-pi-pico"
+				"raspberry-pi.raspberry-pi-pico",
+				"anthropic.claude-code"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",
