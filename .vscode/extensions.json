@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"Gerrnperl.outline-map",
+		"eamodio.gitlens",
+		"gruntfuggly.todo-tree",
+		"mhutchie.git-graph",
+		"mosapride.zenkaku",
+		"oderwat.indent-rainbow",
+		"codeium.codeium"
+	],
+	"unwantedRecommendations": []
+}

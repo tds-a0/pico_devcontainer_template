@@ -9,8 +9,9 @@ import sys
 import os
 import re
 import shutil
+import json
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from datetime import datetime
 
 
@@ -83,7 +84,7 @@ class PicoProjectMover:
             print(f"警告: .envファイルの作成に失敗しました: {e}")
     
     def merge_gitignore(self, src_dir: Path) -> None:
-        # gitignoreファイルをマージ（重複削除
+        # gitignoreファイルをマージ（重複削除）
         src_gitignore = src_dir / ".gitignore"
         dst_gitignore = self.root_dir / ".gitignore"
         
@@ -127,6 +128,126 @@ class PicoProjectMover:
         except OSError as e:
             print(f"警告: 移動元.gitignoreの削除に失敗: {e}")
     
+    def merge_extensions_json(self, src_dir: Path) -> None:
+        # extensions.jsonファイルをマージ（重複削除）
+        src_vscode_dir = src_dir / ".vscode"
+        dst_vscode_dir = self.root_dir / ".vscode"
+        src_extensions = src_vscode_dir / "extensions.json"
+        dst_extensions = dst_vscode_dir / "extensions.json"
+        
+        if not src_extensions.exists():
+            return
+        
+        print("extensions.json をマージ中...")
+        
+        # .vscodeディレクトリが存在しない場合は作成
+        if not dst_vscode_dir.exists():
+            try:
+                dst_vscode_dir.mkdir(parents=True, exist_ok=True)
+            except OSError as e:
+                print(f"警告: .vscodeディレクトリの作成に失敗: {e}")
+                return
+        
+        def clean_json_content(content: str) -> str:
+            """JSONコンテンツから末尾のカンマを除去する"""
+            # 配列やオブジェクトの末尾のカンマを除去する正規表現
+            # ],や},の前のカンマとスペースを除去
+            cleaned = re.sub(r',(\s*[}\]])', r'\1', content)
+            return cleaned
+        
+        # 既存のextensions.jsonを読み込み
+        existing_data = {"recommendations": [], "unwantedRecommendations": []}
+        if dst_extensions.exists():
+            try:
+                with open(dst_extensions, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    if content.strip():  # 空ファイルでないことを確認
+                        # 末尾のカンマを除去してからパース
+                        cleaned_content = clean_json_content(content)
+                        try:
+                            existing_data = json.loads(cleaned_content)
+                            if not isinstance(existing_data, dict):
+                                existing_data = {"recommendations": [], "unwantedRecommendations": []}
+                        except json.JSONDecodeError as e:
+                            print(f"警告: 既存のextensions.jsonのパースに失敗: {e}")
+            except IOError as e:
+                print(f"警告: 既存のextensions.jsonの読み込みに失敗: {e}")
+        
+        # 新しいextensions.jsonを読み込み
+        try:
+            with open(src_extensions, 'r', encoding='utf-8') as f:
+                content = f.read()
+                if content.strip():  # 空ファイルでないことを確認
+                    # 末尾のカンマを除去してからパース
+                    cleaned_content = clean_json_content(content)
+                    new_data = json.loads(cleaned_content)
+                    if not isinstance(new_data, dict):
+                        new_data = {"recommendations": [], "unwantedRecommendations": []}
+                else:
+                    new_data = {"recommendations": [], "unwantedRecommendations": []}
+        except (IOError, json.JSONDecodeError) as e:
+            print(f"警告: 移動元のextensions.jsonの読み込みに失敗: {e}")
+            return
+        
+        # recommendations と unwantedRecommendations をマージ（重複削除）
+        merged_data = {
+            "recommendations": [],
+            "unwantedRecommendations": []
+        }
+        
+        # recommendationsのマージ
+        recommendations_set = set()
+        
+        # 既存のrecommendationsを追加
+        if "recommendations" in existing_data and isinstance(existing_data["recommendations"], list):
+            for rec in existing_data["recommendations"]:
+                if isinstance(rec, str) and rec.strip():  # 文字列であることと空でないことを確認
+                    recommendations_set.add(rec.strip())
+        
+        # 新しいrecommendationsを追加
+        if "recommendations" in new_data and isinstance(new_data["recommendations"], list):
+            for rec in new_data["recommendations"]:
+                if isinstance(rec, str) and rec.strip():  # 文字列であることと空でないことを確認
+                    recommendations_set.add(rec.strip())
+        
+        merged_data["recommendations"] = sorted(list(recommendations_set))
+        
+        # unwantedRecommendationsのマージ
+        unwanted_set = set()
+        
+        # 既存のunwantedRecommendationsを追加
+        if "unwantedRecommendations" in existing_data and isinstance(existing_data["unwantedRecommendations"], list):
+            for rec in existing_data["unwantedRecommendations"]:
+                if isinstance(rec, str) and rec.strip():
+                    unwanted_set.add(rec.strip())
+        
+        # 新しいunwantedRecommendationsを追加
+        if "unwantedRecommendations" in new_data and isinstance(new_data["unwantedRecommendations"], list):
+            for rec in new_data["unwantedRecommendations"]:
+                if isinstance(rec, str) and rec.strip():
+                    unwanted_set.add(rec.strip())
+        
+        merged_data["unwantedRecommendations"] = sorted(list(unwanted_set))
+        
+        # マージしたデータを書き込み
+        try:
+            with open(dst_extensions, 'w', encoding='utf-8') as f:
+                json.dump(merged_data, f, indent='\t', ensure_ascii=False)
+                f.write('\n')  # 最後に改行を追加
+            print("extensions.json のマージが完了しました")
+            print(f"推奨拡張機能数: {len(merged_data['recommendations'])}")
+        except IOError as e:
+            print(f"警告: extensions.jsonのマージに失敗: {e}")
+        
+        # 移動元のextensions.jsonを削除
+        try:
+            src_extensions.unlink()
+            # .vscodeディレクトリが空の場合は削除
+            if src_vscode_dir.exists() and not any(src_vscode_dir.iterdir()):
+                src_vscode_dir.rmdir()
+        except OSError as e:
+            print(f"警告: 移動元extensions.jsonの削除に失敗: {e}")
+    
     def cleanup_build_directory(self, src_dir: Path) -> None:
         # ビルドディレクトリを削除
         build_dir = src_dir / "build"
@@ -147,6 +268,35 @@ class PicoProjectMover:
             if item.name == ".gitignore":
                 continue  # 既にマージ済み
             
+            # .vscodeディレクトリの特別処理
+            if item.name == ".vscode" and item.is_dir():
+                dst_vscode_dir = dst_dir / ".vscode"
+                dst_vscode_dir.mkdir(parents=True, exist_ok=True)
+                
+                # .vscode内のファイルを個別に移動
+                for vscode_item in item.iterdir():
+                    if vscode_item.name == "extensions.json":
+                        continue  # extensions.jsonは既にマージ済み
+                    
+                    dst_item = dst_vscode_dir / vscode_item.name
+                    try:
+                        if vscode_item.is_dir():
+                            shutil.move(str(vscode_item), str(dst_item))
+                        else:
+                            shutil.move(str(vscode_item), str(dst_item))
+                        moved_count += 1
+                    except OSError as e:
+                        print(f"警告: .vscode/{vscode_item.name} の移動に失敗: {e}")
+                
+                # 移動元の.vscodeディレクトリを削除
+                try:
+                    if item.exists() and not any(item.iterdir()):
+                        item.rmdir()
+                except OSError as e:
+                    print(f"警告: 移動元.vscodeディレクトリの削除に失敗: {e}")
+                continue
+            
+            # その他のファイル/ディレクトリの移動
             dst_item = dst_dir / item.name
             try:
                 if item.is_dir():
@@ -287,6 +437,9 @@ class PicoProjectMover:
             
             # .gitignoreマージ
             self.merge_gitignore(src_dir)
+            
+            # extensions.jsonマージ（ファイル移動の前に実行）
+            self.merge_extensions_json(src_dir)
             
             # ビルドディレクトリクリーンアップ
             self.cleanup_build_directory(src_dir)
