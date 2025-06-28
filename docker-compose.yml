@@ -3,11 +3,14 @@ services:
     build:
       context: .
       dockerfile: ./.devcontainer/Dockerfile
-      args:
-        USER_ID: ${LOCAL_UID}
-        GROUP_ID: ${LOCAL_GID}
     volumes:
       # 現在のディレクトリをコンテナの/workspaceにマウント
       - .:/workspace
+      # デバイスアクセス用
+      - /dev:/dev
     ports:
       - "3000:3000"
+    privileged: true
+    environment:
+      - PROJECT_NAME
+    network_mode: host

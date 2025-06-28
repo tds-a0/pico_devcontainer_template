@@ -1,37 +1,28 @@
-FROM ubuntu:22.04
-
-ARG USERNAME=vscode
-ARG USER_ID
-ARG GROUP_ID
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 # 対話的なインストールを避けるために、環境変数を設定
 ARG DEBIAN_FRONTEND=noninteractive
 
-# ホストから渡されたUIDとGIDをリモートに設定
-RUN set -eux; \
-	EXISTING_GROUP=$(getent group ${GROUP_ID} | cut -d: -f1 || true); \
-	if [ -z "$EXISTING_GROUP" ]; then \
-	groupadd --gid ${GROUP_ID} ${USERNAME}; \
-	GROUP_NAME=${USERNAME}; \
-	else \
-	GROUP_NAME=$EXISTING_GROUP; \
-	fi && \
-	useradd --uid ${USER_ID} --gid ${GROUP_ID} -ms /bin/bash ${USERNAME} && \
-	mkdir -p /etc/sudoers.d && \
-	echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}
-
+# 基本パッケージのインストール
 RUN apt-get update && apt-get install -y \
-	git \
+	build-essential \
 	cmake \
 	ninja-build \
-	python3 \
-	python3-pip \
-	tar \
+	gcc-arm-none-eabi \
 	libnewlib-arm-none-eabi \
+	libstdc++-arm-none-eabi-newlib \
+	gdb-multiarch \
 	libhidapi-hidraw0 \
 	libftdi1-2 \
+	udev \
 	clang-format \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+	curl \
+	wget \
+	unzip \
+	tar \
+	# 削除とクリーンアップ
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Unityをクローン
 RUN git clone https://github.com/ThrowTheSwitch/Unity.git /opt/Unity

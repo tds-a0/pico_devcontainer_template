@@ -1,19 +1,40 @@
 {
-	"service": "pico_devcontainer_template",
-	// プロジェクトに応じて変更してください
-	"name": "pico_devcontainer_template",
+	"name": "${localWorkspaceFolderBasename}",
 	"dockerComposeFile": "../docker-compose.yml",
+	"service": "pico_devcontainer_template",
+	"workspaceFolder": "/workspace",
+	"remoteUser": "vscode",
+	"updateRemoteUserUID": true,
 	"forwardPorts": [
 		3000
 	],
-	"initializeCommand": "${localWorkspaceFolder}/.devcontainer/setup_devcontainer.sh",
-	"workspaceFolder": "/workspace",
 	"mounts": [
 		// ホストのSSHキーをコンテナにマウントする
 		"source=${env:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
 	],
-	"remoteUser": "vscode",
-	"overrideCommand": false,
+	"remoteEnv": {
+		"PROJECT_NAME": "${localWorkspaceFolderBasename}"
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": true,
+			"configureZshAsDefaultShell": true,
+			"installOhMyZsh": true,
+			"upgradePackages": true,
+			"username": "vscode",
+			"userUid": "automatic",
+			"userGid": "automatic"
+		},
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.11",
+			"installTools": true
+		}
+	},
+	"postCreateCommand": "/workspace/.devcontainer/setup_devcontainer.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -23,7 +44,17 @@
 				"ajshort.include-autocomplete",
 				"KylinIdeTeam.cmake-intellisence",
 				"raspberry-pi.raspberry-pi-pico"
-			]
+			],
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"cmake.configureOnOpen": true,
+				"C_Cpp.intelliSenseEngine": "default",
+				"C_Cpp.clang_format_fallbackStyle": "file",
+				"files.associations": {
+					"*.h": "c",
+					"*.hpp": "cpp"
+				}
+			}
 		}
 	}
 }
