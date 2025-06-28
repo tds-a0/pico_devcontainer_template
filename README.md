@@ -31,7 +31,7 @@ DevContainer Featuresとautomatic UID/GID mappingを使用しており、Linux�
 ## 使用手順
 
 1. 本テンプレートを任意の場所にコピーし、VScodeで開いてください。
-2. VScodeでコマンドパレットを開き`Dev Containers: Reopen in Container`を選択してDevcontainerを起動します。
+2. VScodeでコマンドパレットを開き`Dev Containers: Reopen in Container`を選択してDevContainerを起動します。
 3. DevContainer内で、Raspberry Pi Pico拡張機能を使ってプロジェクトを初期化してください。
 	- 初期化先時のプロジェクト名はtemp_project`など、一時的な名前にしてください。
 	- 初期化時に拡張機能によって作成されるディレクトリは後の工程で削除されます。
