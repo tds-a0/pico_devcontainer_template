@@ -48,8 +48,9 @@
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",
 				"cmake.configureOnOpen": true,
+				"C_Cpp.clang_format_path": "/usr/bin/clang-format",
+				"C_Cpp.clang_format_style": "file:/workspace/.clang-format",
 				"C_Cpp.intelliSenseEngine": "default",
-				"C_Cpp.clang_format_fallbackStyle": "file",
 				"files.associations": {
 					"*.h": "c",
 					"*.hpp": "cpp"

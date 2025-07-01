@@ -6,7 +6,10 @@
 		"mhutchie.git-graph",
 		"mosapride.zenkaku",
 		"oderwat.indent-rainbow",
-		"codeium.codeium"
+		"codeium.codeium",
+		"bierner.markdown-mermaid",
+		"davidanson.vscode-markdownlint",
+		"foxundermoon.shell-format"
 	],
 	"unwantedRecommendations": []
 }
