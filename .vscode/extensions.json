@@ -9,7 +9,8 @@
 		"codeium.codeium",
 		"bierner.markdown-mermaid",
 		"davidanson.vscode-markdownlint",
-		"foxundermoon.shell-format"
+		"foxundermoon.shell-format",
+		"intellsmi.comment-translate"
 	],
 	"unwantedRecommendations": []
 }

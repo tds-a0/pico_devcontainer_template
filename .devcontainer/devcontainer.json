@@ -33,9 +33,7 @@
 			"version": "3.11",
 			"installTools": true
 		},
-		"ghcr.io/anthropics/devcontainer-features/claude-code": {
-			"version": "latest"
-		}
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
 	},
 	"postCreateCommand": "/workspace/.devcontainer/setup_devcontainer.sh",
 	"customizations": {
@@ -47,7 +45,8 @@
 				"ajshort.include-autocomplete",
 				"KylinIdeTeam.cmake-intellisence",
 				"raspberry-pi.raspberry-pi-pico",
-				"anthropic.claude-code"
+				"anthropic.claude-code",
+				"andrepimenta.claude-code-chat"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",
